@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "959277949474",
+    "project_id": "tio-rico-a517b",
+    "storage_bucket": "tio-rico-a517b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:959277949474:android:0f1dfc5b7033b8fdc0607b",
+        "android_client_info": {
+          "package_name": "com.taller.tiorico"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkaPB6l-ron5tfxYtxv1jrgvwOeAfIWxY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
