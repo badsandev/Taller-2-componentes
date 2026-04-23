@@ -43,7 +43,7 @@ fun AppNavigation(
                 }
             })
         }
-        
+
         composable(Screen.Lobby.route) {
             LaunchedEffect(currentRoom?.status) {
                 if (currentRoom?.status == "STARTED") {
@@ -60,7 +60,7 @@ fun AppNavigation(
                 viewModel = lobbyViewModel
             )
         }
-        
+
         composable(Screen.Dashboard.route) {
             LaunchedEffect(currentRoom?.status) {
                 if (currentRoom?.status == "FINISHED") {
@@ -69,7 +69,7 @@ fun AppNavigation(
                     }
                 }
             }
-            
+
             DashboardScreen(gameViewModel, lobbyViewModel)
         }
 
@@ -84,7 +84,7 @@ fun AppNavigation(
                 }
             )
         }
-        
+
         composable(Screen.History.route) { HistoryScreen(gameViewModel) }
         composable(Screen.Stats.route) { StatsScreen(gameViewModel) }
         composable(Screen.Profile.route) { ProfileScreen(gameViewModel) }

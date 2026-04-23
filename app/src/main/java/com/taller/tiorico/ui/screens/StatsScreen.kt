@@ -37,7 +37,7 @@ fun StatsScreen(viewModel: GameViewModel) {
         RicoCard {
             Text(text = "Distribución de Capital", fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             StatBar("Ahorros", totalSaved, Color(0xFF2ECC71))
             StatBar("Inversiones", totalInvested, MaterialTheme.colorScheme.primary)
             StatBar("Gastos", totalSpent, Color(0xFFE74C3C))
@@ -48,7 +48,7 @@ fun StatsScreen(viewModel: GameViewModel) {
         RicoCard {
             Text(text = "Rendimiento por Ronda", fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(40.dp))
-            
+
             // Simple visual representation of progress
             Row(
                 modifier = Modifier.fillMaxWidth().height(100.dp),

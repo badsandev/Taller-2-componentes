@@ -34,7 +34,7 @@ fun ProfileScreen(viewModel: GameViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(40.dp))
-        
+
         // Avatar
         Surface(
             modifier = Modifier.size(120.dp),
@@ -43,16 +43,16 @@ fun ProfileScreen(viewModel: GameViewModel) {
         ) {
             Box(contentAlignment = Alignment.Center) {
                 Icon(
-                    Icons.Default.Person, 
-                    contentDescription = null, 
+                    Icons.Default.Person,
+                    contentDescription = null,
                     modifier = Modifier.size(60.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         Text(
             text = player.name,
             style = MaterialTheme.typography.headlineMedium,
@@ -63,18 +63,18 @@ fun ProfileScreen(viewModel: GameViewModel) {
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
         )
-        
+
         Spacer(modifier = Modifier.height(32.dp))
-        
+
         SectionHeader("Ajustes de Cuenta")
-        
+
         ProfileOption("Configuración de Perfil", Icons.Default.Settings)
         ProfileOption("Preferencias de Notificaciones", Icons.Default.Notifications)
         ProfileOption("Modo Oscuro", Icons.Default.DarkMode, hasSwitch = true)
         ProfileOption("Cerrar Sesión", Icons.Default.ExitToApp, color = Color(0xFFE74C3C))
-        
+
         Spacer(modifier = Modifier.weight(1f))
-        
+
         Text(
             text = "Tío Rico App v1.0.0",
             style = MaterialTheme.typography.labelSmall,
@@ -86,8 +86,8 @@ fun ProfileScreen(viewModel: GameViewModel) {
 
 @Composable
 fun ProfileOption(
-    title: String, 
-    icon: ImageVector, 
+    title: String,
+    icon: ImageVector,
     hasSwitch: Boolean = false,
     color: Color = MaterialTheme.colorScheme.onSurface
 ) {
@@ -103,7 +103,7 @@ fun ProfileOption(
             Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(24.dp))
             Spacer(modifier = Modifier.width(16.dp))
             Text(
-                text = title, 
+                text = title,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(1f),
                 color = color
@@ -112,8 +112,8 @@ fun ProfileOption(
                 Switch(checked = true, onCheckedChange = {})
             } else {
                 Icon(
-                    Icons.Default.ChevronRight, 
-                    contentDescription = null, 
+                    Icons.Default.ChevronRight,
+                    contentDescription = null,
                     tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
                 )
             }

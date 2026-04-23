@@ -36,20 +36,20 @@ fun ResultsScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(40.dp))
-        
+
         Icon(
             Icons.Default.EmojiEvents,
             contentDescription = null,
             modifier = Modifier.size(100.dp),
             tint = GoldPrimary
         )
-        
+
         Text(
             text = "¡Fin de la Partida!",
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Black
         )
-        
+
         Text(
             text = "Ranking de Magnates",
             style = MaterialTheme.typography.bodyMedium,

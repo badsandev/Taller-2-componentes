@@ -17,7 +17,7 @@ class FirebaseGameDataSource : GameDataSource {
     override fun createGame(userId: String, userName: String, roomName: String, onComplete: (String) -> Unit) {
         val roomsRef = firestore.collection("rooms").document()
         val generatedId = roomsRef.id
-        
+
         val roomData = hashMapOf(
             "hostId" to userId,
             "hostName" to userName,
@@ -38,9 +38,9 @@ class FirebaseGameDataSource : GameDataSource {
         )
 
         roomsRef.set(roomData)
-            .addOnSuccessListener { 
+            .addOnSuccessListener {
                 Log.d("FirebaseGameDataSource", "Sala creada con éxito: $generatedId")
-                onComplete(generatedId) 
+                onComplete(generatedId)
             }
             .addOnFailureListener { e ->
                 Log.e("FirebaseGameDataSource", "Error al crear sala", e)
@@ -50,7 +50,7 @@ class FirebaseGameDataSource : GameDataSource {
     override fun joinGame(roomId: String, userId: String, userName: String, onComplete: () -> Unit) {
         if (roomId.isEmpty()) return
         val roomRef = firestore.collection("rooms").document(roomId)
-        
+
         val newPlayerData = hashMapOf(
             "id" to userId,
             "name" to userName,

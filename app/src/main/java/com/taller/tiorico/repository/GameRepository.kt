@@ -14,7 +14,6 @@ class GameRepository {
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
 
-    // --- Player Logic ---
     suspend fun savePlayerState(player: Player) {
         val userId = auth.currentUser?.uid ?: return
         firestore.collection("players").document(userId).set(player).await()
@@ -32,11 +31,10 @@ class GameRepository {
     fun getCurrentUserId(): String? = auth.currentUser?.uid
     fun getCurrentUserName(): String? = auth.currentUser?.email?.substringBefore("@")
 
-    // --- Room Logic ---
     suspend fun createRoom(roomName: String): String {
         val userId = auth.currentUser?.uid ?: throw Exception("User not logged in")
         val userName = getCurrentUserName() ?: "Player"
-        
+
         val newRoom = GameRoom(
             hostId = userId,
             hostName = userName,
@@ -44,7 +42,7 @@ class GameRepository {
             status = RoomStatus.WAITING.name,
             players = mapOf(userId to Player(id = userId, name = userName))
         )
-        
+
         val docRef = firestore.collection("rooms").add(newRoom).await()
         return docRef.id
     }
@@ -52,15 +50,15 @@ class GameRepository {
     suspend fun joinRoom(roomId: String) {
         val userId = auth.currentUser?.uid ?: throw Exception("User not logged in")
         val userName = getCurrentUserName() ?: "Player"
-        
+
         val roomDoc = firestore.collection("rooms").document(roomId).get().await()
         val room = roomDoc.toObject(GameRoom::class.java) ?: throw Exception("Room not found")
-        
+
         if (room.players.size >= room.maxPlayers) throw Exception("Room is full")
-        
+
         val updatedPlayers = room.players.toMutableMap()
         updatedPlayers[userId] = Player(id = userId, name = userName)
-        
+
         firestore.collection("rooms").document(roomId)
             .update("players", updatedPlayers).await()
     }
@@ -87,10 +85,10 @@ class GameRepository {
         val userId = auth.currentUser?.uid ?: return
         val roomDoc = firestore.collection("rooms").document(roomId).get().await()
         val room = roomDoc.toObject(GameRoom::class.java) ?: return
-        
+
         val updatedPlayers = room.players.toMutableMap()
         updatedPlayers[userId] = player
-        
+
         firestore.collection("rooms").document(roomId)
             .update("players", updatedPlayers).await()
     }

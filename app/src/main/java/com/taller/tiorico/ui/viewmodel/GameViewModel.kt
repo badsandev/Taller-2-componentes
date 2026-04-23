@@ -72,7 +72,7 @@ class GameViewModel : ViewModel() {
         _playerState.update { current ->
             val newBalance = current.balance + amountChange
             val nextRound = current.currentRound + 1
-            
+
             var eventChange = 0.0
             var eventTransaction: Transaction? = null
             if (Random.nextInt(100) < 20) {
@@ -98,7 +98,7 @@ class GameViewModel : ViewModel() {
                 finished = isFinished
             )
         }
-        
+
         // Persistir en Firebase
         viewModelScope.launch {
             repository.savePlayerState(_playerState.value)

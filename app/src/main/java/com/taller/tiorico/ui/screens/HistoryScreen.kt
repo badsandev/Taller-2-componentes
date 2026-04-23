@@ -23,7 +23,7 @@ fun HistoryScreen(viewModel: GameViewModel) {
             .padding(horizontal = 20.dp)
     ) {
         SectionHeader("Historial Detallado")
-        
+
         if (player.transactions.isEmpty()) {
             Text(
                 text = "Aún no hay movimientos en esta partida.",

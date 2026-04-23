@@ -31,7 +31,7 @@ class LobbyViewModel(
         dataSource.listenAvailableGames { rooms ->
             _availableRooms.value = rooms
         }
-        
+
         // Observador para finalizar el juego cuando todos terminen
         viewModelScope.launch {
             currentRoom.collect { room ->
@@ -48,7 +48,7 @@ class LobbyViewModel(
     fun createRoom(name: String) {
         val userId = auth.currentUser?.uid ?: return
         val userName = auth.currentUser?.email?.substringBefore("@") ?: "Jugador"
-        
+
         dataSource.createGame(userId, userName, name) { roomId ->
             listenToRoom(roomId)
         }
@@ -57,7 +57,7 @@ class LobbyViewModel(
     fun joinRoom(roomId: String) {
         val userId = auth.currentUser?.uid ?: return
         val userName = auth.currentUser?.email?.substringBefore("@") ?: "Jugador"
-        
+
         dataSource.joinGame(roomId, userId, userName) {
             listenToRoom(roomId)
         }

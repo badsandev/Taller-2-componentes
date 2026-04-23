@@ -73,7 +73,7 @@ fun SectionHeader(title: String) {
 fun TransactionItem(transaction: Transaction) {
     val icon: ImageVector
     val color: Color
-    
+
     when (transaction.type) {
         TransactionType.SAVE -> {
             icon = Icons.Default.Add

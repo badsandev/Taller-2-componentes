@@ -4,29 +4,30 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.taller.tiorico.model.Transaction
 import com.taller.tiorico.model.TransactionType
 import com.taller.tiorico.ui.components.ActionButton
 import com.taller.tiorico.ui.components.RicoCard
 import com.taller.tiorico.ui.components.SectionHeader
 import com.taller.tiorico.ui.theme.GoldDark
+import com.taller.tiorico.ui.viewmodel.ChatViewModel
 import com.taller.tiorico.ui.viewmodel.GameViewModel
 import com.taller.tiorico.ui.viewmodel.LobbyViewModel
 import java.text.NumberFormat
 import java.util.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
     gameViewModel: GameViewModel,
@@ -35,6 +36,10 @@ fun DashboardScreen(
     val player by gameViewModel.playerState.collectAsState()
     val gameMessage by gameViewModel.gameMessage.collectAsState()
     val currentRoom by lobbyViewModel.currentRoom.collectAsState()
+
+    val chatViewModel: ChatViewModel = viewModel()
+    var showChat by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     // Sincronizar el estado del jugador con la sala en Firebase
     LaunchedEffect(player) {
@@ -66,7 +71,11 @@ fun DashboardScreen(
         ) {
             item {
                 Spacer(modifier = Modifier.height(24.dp))
-                HeaderSection(player.name, player.currentRound)
+                HeaderSection(
+                    name = player.name,
+                    round = player.currentRound,
+                    onChatClick = { showChat = true }
+                )
             }
 
             item {
@@ -97,17 +106,31 @@ fun DashboardScreen(
                 Spacer(modifier = Modifier.height(80.dp))
             }
         }
+
+        if (showChat) {
+            ModalBottomSheet(
+                onDismissRequest = { showChat = false },
+                sheetState = sheetState,
+                containerColor = MaterialTheme.colorScheme.background,
+                dragHandle = { BottomSheetDefaults.DragHandle() }
+            ) {
+                ChatScreen(
+                    roomId = currentRoom?.docId ?: "",
+                    viewModel = chatViewModel
+                )
+            }
+        }
     }
 }
 
 @Composable
-fun HeaderSection(name: String, round: Int) {
+fun HeaderSection(name: String, round: Int, onChatClick: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = "Hola, $name",
                 style = MaterialTheme.typography.headlineSmall,
@@ -119,6 +142,23 @@ fun HeaderSection(name: String, round: Int) {
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
             )
         }
+
+        IconButton(onClick = onChatClick) {
+            BadgedBox(
+                badge = {
+                    // Aquí podrías poner un punto si hay mensajes nuevos
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.Chat,
+                    contentDescription = "Chat",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.width(8.dp))
+
         Surface(
             color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
             shape = MaterialTheme.shapes.medium
