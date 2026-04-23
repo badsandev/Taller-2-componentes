@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -15,6 +16,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.taller.tiorico.model.GameRoom
 import com.taller.tiorico.ui.components.RicoCard
 import com.taller.tiorico.ui.components.SectionHeader
+import com.taller.tiorico.ui.viewmodel.ChatViewModel
 import com.taller.tiorico.ui.viewmodel.LobbyViewModel
 
 @Composable
@@ -48,7 +50,7 @@ fun LobbyScreen(
                     .padding(horizontal = 20.dp)
             ) {
                 SectionHeader("Salas Disponibles")
-                
+
                 if (rooms.isEmpty()) {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text("No hay salas activas. ¡Crea una!", color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f))
@@ -106,44 +108,75 @@ fun RoomItem(room: GameRoom, onJoin: () -> Unit) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WaitingRoomScreen(
     room: GameRoom,
     onStartGame: () -> Unit,
-    onRoomStarted: () -> Unit
+    onRoomStarted: () -> Unit,
+    chatViewModel: ChatViewModel = viewModel()
 ) {
+    var showChat by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
     LaunchedEffect(room.status) {
         if (room.status == "STARTED") {
             onRoomStarted()
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        SectionHeader("Sala: ${room.name}")
-        Text(text = "Esperando jugadores...", style = MaterialTheme.typography.bodyMedium)
-        
-        Spacer(modifier = Modifier.height(24.dp))
-        
-        RicoCard {
-            Text(text = "Jugadores conectados:", fontWeight = FontWeight.Bold)
-            room.players.values.forEach { player ->
-                Text(text = "• ${player.name}", modifier = Modifier.padding(vertical = 4.dp))
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { showChat = true },
+                containerColor = MaterialTheme.colorScheme.secondaryContainer
+            ) {
+                Icon(Icons.AutoMirrored.Filled.Chat, contentDescription = "Chat")
             }
         }
-        
-        Spacer(modifier = Modifier.weight(1f))
-        
-        Button(
-            onClick = onStartGame,
-            modifier = Modifier.fillMaxWidth(),
-            enabled = room.players.size >= 1
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Iniciar Juego")
+            SectionHeader("Sala: ${room.name}")
+            Text(text = "Esperando jugadores...", style = MaterialTheme.typography.bodyMedium)
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            RicoCard {
+                Text(text = "Jugadores conectados:", fontWeight = FontWeight.Bold)
+                room.players.values.forEach { player ->
+                    Text(text = "• ${player.name}", modifier = Modifier.padding(vertical = 4.dp))
+                }
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Button(
+                onClick = onStartGame,
+                modifier = Modifier.fillMaxWidth(),
+                enabled = room.players.size >= 1
+            ) {
+                Text("Iniciar Juego")
+            }
+        }
+    }
+
+    if (showChat) {
+        ModalBottomSheet(
+            onDismissRequest = { showChat = false },
+            sheetState = sheetState,
+            containerColor = MaterialTheme.colorScheme.background,
+            dragHandle = { BottomSheetDefaults.DragHandle() }
+        ) {
+            ChatScreen(
+                roomId = room.docId,
+                viewModel = chatViewModel
+            )
         }
     }
 }
